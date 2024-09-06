@@ -62,12 +62,15 @@ public class EventHandlerForge
 				{
 					if(stack.is(item))
 					{
-						SuperDuperUtil.tame(living, player);
-						if(!player.getAbilities().instabuild)
+						if(Math.random() <= SuperDuperUtil.parseTameChance(living) / 100.0F)
 						{
-							stack.shrink(1);
+							SuperDuperUtil.tame(living, player);
+							if(!player.getAbilities().instabuild)
+							{
+								stack.shrink(1);
+							}
+							event.setCancellationResult(InteractionResult.SUCCESS);
 						}
-						event.setCancellationResult(InteractionResult.SUCCESS);
 					}
 				}
 			}
@@ -97,7 +100,7 @@ public class EventHandlerForge
 			{
 				if(living instanceof Mob mob)
 				{
-					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseFollowingSpeed(mob), 4.0F, 2.0F, true));
+					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
 					mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 					mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 				}

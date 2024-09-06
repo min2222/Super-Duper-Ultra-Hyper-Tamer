@@ -43,11 +43,27 @@ public class SuperDuperUtil
 			if(pet instanceof Mob mob)
 			{
 				mob.setTarget(null);
-				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseFollowingSpeed(mob), 4.0F, 2.0F, true));
+				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
 				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 			}
 		}
+	}
+	
+	public static float parseTameChance(Entity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.tameChance.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String chance = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(chance);
+			}
+		}
+		return 100.0F;
 	}
 	
 	public static boolean isBlacklisted(Entity entity)
@@ -61,10 +77,10 @@ public class SuperDuperUtil
 		return false;
 	}
 	
-	public static float parseFollowingSpeed(Entity entity)
+	public static float parseMovementSpeed(Entity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-		List<? extends String> list = SuperDuperConfig.followingSpeed.get();
+		List<? extends String> list = SuperDuperConfig.movementSpeed.get();
 		for(String string : list)
 		{
 			String mobId = string.split("=")[0];

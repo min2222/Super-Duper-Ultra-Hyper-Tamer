@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "com.min01.superduper.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [],
+	"client": [],
+	"server": [],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"refmap": "superduper.refmap.json"
+}

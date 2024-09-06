@@ -20,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -44,11 +43,38 @@ public class SuperDuperUtil
 			if(pet instanceof Mob mob)
 			{
 				mob.setTarget(null);
-				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED), 4.0F, 2.0F, true));
+				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseFollowingSpeed(mob), 4.0F, 2.0F, true));
 				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 			}
 		}
+	}
+	
+	public static boolean isBlacklisted(Entity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.blackList.get();
+		if(!list.isEmpty())
+		{
+			return list.contains(location.toString());
+		}
+		return false;
+	}
+	
+	public static float parseFollowingSpeed(Entity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.followingSpeed.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String speed = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(speed);
+			}
+		}
+		return 1.3F;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })

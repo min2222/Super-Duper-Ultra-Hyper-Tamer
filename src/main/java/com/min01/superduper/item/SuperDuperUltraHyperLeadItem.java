@@ -21,7 +21,7 @@ public class SuperDuperUltraHyperLeadItem extends Item
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack p_41398_, Player p_41399_, LivingEntity p_41400_, InteractionHand p_41401_)
 	{
-		if(!(p_41400_ instanceof TamableAnimal) && !SuperDuperUtil.isTame(p_41400_))
+		if(!(p_41400_ instanceof TamableAnimal) && !SuperDuperUtil.isTame(p_41400_) && !SuperDuperUtil.isBlacklisted(p_41400_))
 		{
 			SuperDuperUtil.tame(p_41400_, p_41399_);
 			return InteractionResult.SUCCESS;

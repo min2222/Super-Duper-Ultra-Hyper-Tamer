@@ -30,6 +30,22 @@ public abstract class MixinLivingEntity extends MixinEntity
 		}
 	}
 	
+	@Override
+	protected void getPassengersRidingOffset(CallbackInfoReturnable<Double> cir)
+	{
+		LivingEntity living = LivingEntity.class.cast(this);
+		if(SuperDuperUtil.isTame(living))
+		{
+			if(living.getFirstPassenger() != null)
+			{
+				if(SuperDuperUtil.getOwner(living) == living.getFirstPassenger())
+				{
+					cir.setReturnValue(SuperDuperUtil.parseMountOffset(living));
+				}
+			}
+		}
+	}
+	
 	@ModifyVariable(at = @At("HEAD"), method = "travel")
 	private Vec3 travel(Vec3 vec3)
 	{

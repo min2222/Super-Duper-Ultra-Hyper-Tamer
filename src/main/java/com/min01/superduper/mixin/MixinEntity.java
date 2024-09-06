@@ -16,6 +16,12 @@ public class MixinEntity
 	{
 		
 	}
+	
+	@Inject(at = @At("HEAD"), method = "getPassengersRidingOffset", cancellable = true)
+	protected void getPassengersRidingOffset(CallbackInfoReturnable<Double> cir)
+	{
+		
+	}
     
     @Shadow
     protected void setRot(float p_19916_, float p_19917_)

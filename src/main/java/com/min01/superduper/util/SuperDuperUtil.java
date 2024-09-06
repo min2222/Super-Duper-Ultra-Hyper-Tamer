@@ -50,6 +50,22 @@ public class SuperDuperUtil
 		}
 	}
 	
+	public static double parseMountOffset(Entity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.mountOffset.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String y = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(y);
+			}
+		}
+		return entity.getBbHeight() * 0.75D;
+	}
+	
 	public static float parseTameChance(Entity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());

@@ -8,6 +8,7 @@ import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,12 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,7 +38,7 @@ public class EventHandlerForge
 	{
 		LivingEntity living = event.getEntity();
 		Entity target = event.getNewTarget();
-		if(target != null)
+		if(target != null && living != null)
 		{
 			if(SuperDuperUtil.isTame(living))
 			{
@@ -97,6 +100,20 @@ public class EventHandlerForge
 				{
 					player.startRiding(living);
 				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onLivingDeath(LivingDeathEvent event)
+	{
+		LivingEntity living = event.getEntity();
+		if(SuperDuperUtil.isTame(living))
+		{
+			Entity owner = SuperDuperUtil.getOwner(living);
+			if(!living.level.isClientSide && living.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && owner instanceof ServerPlayer) 
+			{
+				owner.sendSystemMessage(living.getCombatTracker().getDeathMessage());
 			}
 		}
 	}

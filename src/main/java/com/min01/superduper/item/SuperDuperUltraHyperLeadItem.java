@@ -2,6 +2,7 @@ package com.min01.superduper.item;
 
 import com.min01.superduper.util.SuperDuperUtil;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,10 +21,14 @@ public class SuperDuperUltraHyperLeadItem extends Item
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack p_41398_, Player p_41399_, LivingEntity p_41400_, InteractionHand p_41401_)
 	{
-		if(!(p_41400_ instanceof TamableAnimal) && !SuperDuperUtil.isTame(p_41400_))
+		if(!(p_41400_ instanceof TamableAnimal))
 		{
 			SuperDuperUtil.tame(p_41400_, p_41399_);
 			return InteractionResult.SUCCESS;
+		}
+		else
+		{
+			p_41399_.displayClientMessage(Component.translatable("entity.superduper.already_tameable"), true);
 		}
 		return super.interactLivingEntity(p_41398_, p_41399_, p_41400_, p_41401_);
 	}

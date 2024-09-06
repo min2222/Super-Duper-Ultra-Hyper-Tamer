@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -30,7 +31,7 @@ public class SuperDuperUtil
 {
 	public static void tame(LivingEntity pet, LivingEntity owner)
 	{
-		if(getOwner(pet) == null)
+		if(!isTame(owner))
 		{
 			setOwner(pet, owner);
 			for(int i = 0; i < 7; ++i) 
@@ -42,7 +43,8 @@ public class SuperDuperUtil
 			}
 			if(pet instanceof Mob mob)
 			{
-				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, 1.3D, 4.0F, 2.0F, true));
+				mob.setTarget(null);
+				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED), 4.0F, 2.0F, true));
 				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 			}
@@ -104,9 +106,15 @@ public class SuperDuperUtil
 	//0 == wandering
 	//1 == follow
 	//2 == sit
+	
+	public static boolean isFollow(Entity entity)
+	{
+		return isTame(entity) && getCommand(entity) == 1;
+	}
+	
 	public static boolean isSit(Entity entity)
 	{
-		return getOwner(entity) != null && getCommand(entity) == 2;
+		return isTame(entity) && getCommand(entity) == 2;
 	}
 	
 	public static boolean isTame(Entity entity)

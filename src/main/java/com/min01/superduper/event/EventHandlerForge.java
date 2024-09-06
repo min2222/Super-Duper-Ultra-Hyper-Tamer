@@ -6,16 +6,18 @@ import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
 import com.min01.superduper.util.SuperDuperUtil;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,23 +27,18 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class EventHandlerForge
 {
 	@SubscribeEvent
-	public static void onLivingTick(LivingTickEvent event)
+	public static void onLivingChangeTarget(LivingChangeTargetEvent event)
 	{
 		LivingEntity living = event.getEntity();
-		if(SuperDuperUtil.isTame(living))
+		Entity target = event.getNewTarget();
+		if(target != null)
 		{
-			LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(living);
-			if(owner != null)
+			if(SuperDuperUtil.isTame(living))
 			{
-				if(living instanceof Mob mob)
+				LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(living);
+				if(SuperDuperUtil.isAllay(owner, living, target))
 				{
-					if(mob.getTarget() != null)
-					{
-						if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()) || owner.getLastHurtByMob() == null || owner.getLastHurtMob() == null)
-						{
-							mob.setTarget(null);
-						}
-					}
+					event.setCanceled(true);
 				}
 			}
 		}
@@ -71,6 +68,19 @@ public class EventHandlerForge
 					}
 				}
 			}
+			else if(player == SuperDuperUtil.getOwner(living))
+			{
+				if(player.isShiftKeyDown())
+				{
+					int command = SuperDuperUtil.getCommand(living) + 1;
+					SuperDuperUtil.setCommand(living, command >= 3 ? 0 : command);
+	                player.displayClientMessage(Component.translatable("entity.superduper.all.command_" + SuperDuperUtil.getCommand(living), living.getName()), true);
+				}
+				else
+				{
+					player.startRiding(living);
+				}
+			}
 		}
 	}
 	
@@ -78,13 +88,16 @@ public class EventHandlerForge
 	public static void onEntityJoinLevel(EntityJoinLevelEvent event)
 	{
 		Entity entity = event.getEntity();
-		if(SuperDuperUtil.isTame(entity))
+		if(entity instanceof LivingEntity living)
 		{
-			if(entity instanceof Mob mob)
+			if(SuperDuperUtil.isTame(living))
 			{
-				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, 1.3D, 4.0F, 2.0F, true));
-				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
-				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
+				if(living instanceof Mob mob)
+				{
+					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, mob.getAttributeBaseValue(Attributes.MOVEMENT_SPEED), 4.0F, 2.0F, true));
+					mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
+					mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
+				}
 			}
 		}
 	}

@@ -63,6 +63,10 @@ public class SuperDuperFollowOwnerGoal extends Goal
 		{
 			return false;
 		}
+		else if(this.mob.getTarget() != null)
+		{
+			return false;
+		}
 		else if(this.mob.distanceToSqr(livingentity) < (double) (this.startDistance * this.startDistance)) 
 		{
 			return false;
@@ -70,7 +74,7 @@ public class SuperDuperFollowOwnerGoal extends Goal
 		else
 		{
 			this.owner = livingentity;
-			return true;
+			return SuperDuperUtil.isFollow(this.mob);
 		}
 	}
 

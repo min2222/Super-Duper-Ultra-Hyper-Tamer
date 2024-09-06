@@ -32,12 +32,12 @@ public class SuperDuperOwnerHurtByTargetGoal extends TargetGoal
 			if(livingentity == null)
 			{
 				return false;
-			} 
+			}
 			else 
 			{
 				this.ownerLastHurtBy = livingentity.getLastHurtByMob();
 				int i = livingentity.getLastHurtByMobTimestamp();
-				return i != this.timestamp && this.canAttack(this.ownerLastHurtBy, TargetingConditions.DEFAULT) ;
+				return i != this.timestamp && this.canAttack(this.ownerLastHurtBy, TargetingConditions.forNonCombat());
 			}
 		} 
 		else

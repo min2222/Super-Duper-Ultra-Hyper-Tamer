@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -22,14 +23,17 @@ public class MixinProjectile
 		if(projectile.getOwner() != null)
 		{
 			Entity owner = projectile.getOwner();
-			if(hitResult instanceof EntityHitResult entityHit)
+			if(owner instanceof LivingEntity living)
 			{
-				Entity entity = entityHit.getEntity();
-				if(SuperDuperUtil.isTame(owner))
+				if(hitResult instanceof EntityHitResult entityHit)
 				{
-					if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(owner), owner, entity))
+					Entity entity = entityHit.getEntity();
+					if(SuperDuperUtil.isTame(living))
 					{
-						ci.cancel();
+						if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(living), living, entity))
+						{
+							ci.cancel();
+						}
 					}
 				}
 			}

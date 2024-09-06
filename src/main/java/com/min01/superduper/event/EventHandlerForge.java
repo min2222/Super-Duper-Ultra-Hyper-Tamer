@@ -13,13 +13,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -132,25 +128,6 @@ public class EventHandlerForge
 				if(SuperDuperUtil.isAllay(owner, entity, living))
 				{
 					event.setCanceled(true);
-				}
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onProjectileImpact(ProjectileImpactEvent event)
-	{
-		Projectile projectile = event.getProjectile();
-		HitResult hitResult = event.getRayTraceResult();
-		if(projectile.getOwner() != null)
-		{
-			Entity owner = projectile.getOwner();
-			if(hitResult instanceof EntityHitResult entityHit)
-			{
-				Entity entity = entityHit.getEntity();
-				if(SuperDuperUtil.isTame(owner))
-				{
-					if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(owner), owner, entity));
 				}
 			}
 		}

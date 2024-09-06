@@ -6,6 +6,7 @@ import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
 import com.min01.superduper.util.SuperDuperUtil;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -65,12 +66,22 @@ public class EventHandlerForge
 						if(Math.random() <= SuperDuperUtil.parseTameChance(living) / 100.0F)
 						{
 							SuperDuperUtil.tame(living, player);
-							if(!player.getAbilities().instabuild)
-							{
-								stack.shrink(1);
-							}
-							event.setCancellationResult(InteractionResult.SUCCESS);
 						}
+						else
+						{
+							for(int i = 0; i < 7; ++i) 
+							{
+								double d0 = living.level.random.nextGaussian() * 0.02D;
+								double d1 = living.level.random.nextGaussian() * 0.02D;
+								double d2 = living.level.random.nextGaussian() * 0.02D;
+								living.level.addParticle(ParticleTypes.SMOKE, living.getRandomX(1.0D), living.getRandomY() + 0.5D, living.getRandomZ(1.0D), d0, d1, d2);
+							}
+						}
+						if(!player.getAbilities().instabuild)
+						{
+							stack.shrink(1);
+						}
+						event.setCancellationResult(InteractionResult.SUCCESS);
 					}
 				}
 			}

@@ -17,8 +17,9 @@ public class SuperDuperConfig
 
 	public static ConfigValue<List<? extends String>> tamingItems;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
-	public static ConfigValue<List<? extends String>> followingSpeed;
+	public static ConfigValue<List<? extends String>> movementSpeed;
 	public static ConfigValue<List<? extends String>> blackList;
+	public static ConfigValue<List<? extends String>> tameChance;
     
     public static void loadConfig(ForgeConfigSpec config, String path) 
     {
@@ -40,6 +41,9 @@ public class SuperDuperConfig
     	SuperDuperConfig.blackList = config.comment("blacklisted mobs can't be tamed. example : minecraft:warden").define("blackList", Arrays.asList(new String[] {
     			"minecraft:warden"
     	}), String.class::isInstance);
+    	SuperDuperConfig.tameChance = config.comment("tame success chance for mobs. example : minecraft:husk=80.0").define("tameChance", Arrays.asList(new String[] {
+    			"minecraft:husk=80.0"
+    	}), String.class::isInstance);
         config.pop();
     	
     	config.push("Client Settings");
@@ -52,7 +56,7 @@ public class SuperDuperConfig
     	SuperDuperConfig.tamingItems = config.comment("item needed for tame mobs. example : minecraft:husk=minecraft:rotten_flesh").define("tamingItems", Arrays.asList(new String[] {
     			"minecraft:husk=minecraft:rotten_flesh"
     	}), String.class::isInstance);
-    	SuperDuperConfig.followingSpeed = config.comment("owner following speed for pets. example : minecraft:husk=1.3").define("followingSpeed", Arrays.asList(new String[] {
+    	SuperDuperConfig.movementSpeed = config.comment("movementSpeed for when pets following owner or controlled by owner. example : minecraft:husk=1.3").define("movementSpeed", Arrays.asList(new String[] {
     			"minecraft:husk=1.3"
     	}), String.class::isInstance);
         config.pop();

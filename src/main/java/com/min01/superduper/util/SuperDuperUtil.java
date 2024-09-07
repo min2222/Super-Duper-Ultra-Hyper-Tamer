@@ -190,6 +190,26 @@ public class SuperDuperUtil
 		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getCommand();
 	}
 	
+	public static void setLastHurtByMob(LivingEntity entiy, LivingEntity mob)
+	{
+		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtByMob(mob);
+	}
+
+	public static LivingEntity getLastHurtByMob(LivingEntity entiy)
+	{
+		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtByMob();
+	}
+
+	public static void setLastHurtMob(LivingEntity entiy, LivingEntity mob)
+	{
+		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtMob(mob);
+	}
+
+	public static LivingEntity getLastHurtMob(LivingEntity entiy)
+	{
+		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtMob();
+	}
+	
 	public static void setOwner(LivingEntity entiy, LivingEntity owner)
 	{
 		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setOwner(owner);

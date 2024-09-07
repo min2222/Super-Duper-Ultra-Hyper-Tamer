@@ -44,7 +44,7 @@ public class SuperDuperFollowOwnerGoal extends Goal
 	@Override
 	public boolean canUse() 
 	{
-		LivingEntity livingentity = (LivingEntity) SuperDuperUtil.getOwner(this.mob);
+		LivingEntity livingentity = SuperDuperUtil.getOwner(this.mob);
 		if(livingentity == null)
 		{
 			return false;

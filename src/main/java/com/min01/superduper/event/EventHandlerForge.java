@@ -41,12 +41,43 @@ public class EventHandlerForge
 		{
 			if(living instanceof Mob mob)
 			{
+				LivingEntity owner = SuperDuperUtil.getOwner(mob);
 				if(mob.getTarget() != null)
 				{
-					LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(mob);
-					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()))
+					LivingEntity target = mob.getTarget();
+					if(SuperDuperUtil.getLastHurtByMob(mob) == null || SuperDuperUtil.getLastHurtMob(mob) == null || SuperDuperUtil.isAllay(owner, mob, target))
 					{
 						mob.setTarget(null);
+					}
+					if(SuperDuperUtil.getLastHurtByMob(mob) != null)
+					{
+						if(target != SuperDuperUtil.getLastHurtByMob(mob))
+						{
+							mob.setTarget(null);
+						}
+					}
+					if(SuperDuperUtil.getLastHurtMob(mob) != null)
+					{
+						if(target != SuperDuperUtil.getLastHurtMob(mob))
+						{
+							mob.setTarget(null);
+						}
+					}
+				}
+				if(owner.getLastHurtByMob() != null)
+				{
+					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtByMob()))
+					{
+						mob.setTarget(owner.getLastHurtByMob());
+						SuperDuperUtil.setLastHurtByMob(mob, owner.getLastHurtByMob());
+					}
+				}
+				if(owner.getLastHurtMob() != null)
+				{
+					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtMob()))
+					{
+						mob.setTarget(owner.getLastHurtMob());
+						SuperDuperUtil.setLastHurtMob(mob, owner.getLastHurtMob());
 					}
 				}
 			}

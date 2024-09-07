@@ -3,7 +3,6 @@ package com.min01.superduper.network;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import com.min01.superduper.capabilities.SuperDuperCapabilities;
 import com.min01.superduper.util.SuperDuperClientUtil;
 import com.min01.superduper.util.SuperDuperUtil;
 
@@ -14,25 +13,49 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class UpdateOwnerCapabilityPacket 
 {
-	private final int entityID;
+	private final UUID entityUUID;
 	private final UUID ownerUUID;
+	private final UUID lastHurtByMobUUID;
+	private final UUID lastHurtMobUUID;
+	private final int command;
+	private final UpdateType type;
 	
-	public UpdateOwnerCapabilityPacket(int id, UUID ownerUUID) 
+	public static enum UpdateType
 	{
-		this.entityID = id;
+		OWNER,
+		LAST_HURT_BY_MOB,
+		LAST_HURT_MOB,
+		COMMAND
+	}
+	
+	public UpdateOwnerCapabilityPacket(Entity entity, UpdateType type, UUID ownerUUID, UUID lastHurtByMobUUID, UUID lastHurtMobUUID, int command) 
+	{
+		this.entityUUID = entity.getUUID();
 		this.ownerUUID = ownerUUID;
+		this.lastHurtByMobUUID = lastHurtByMobUUID;
+		this.lastHurtMobUUID = lastHurtMobUUID;
+		this.command = command;
+		this.type = type;
 	}
 
 	public UpdateOwnerCapabilityPacket(FriendlyByteBuf buf)
 	{
-		this.entityID = buf.readInt();
+		this.entityUUID = buf.readUUID();
 		this.ownerUUID = buf.readUUID();
+		this.lastHurtByMobUUID = buf.readUUID();
+		this.lastHurtMobUUID = buf.readUUID();
+		this.command = buf.readInt();
+		this.type = UpdateType.values()[buf.readInt()];
 	}
 
 	public void encode(FriendlyByteBuf buf)
 	{
-		buf.writeInt(this.entityID);
+		buf.writeUUID(this.entityUUID);
 		buf.writeUUID(this.ownerUUID);
+		buf.writeUUID(this.lastHurtByMobUUID);
+		buf.writeUUID(this.lastHurtMobUUID);
+		buf.writeInt(this.command);
+		buf.writeInt(this.type.ordinal());
 	}
 	
 	public static class Handler 
@@ -41,17 +64,29 @@ public class UpdateOwnerCapabilityPacket
 		{
 			ctx.get().enqueueWork(() ->
 			{
-				Entity entity = SuperDuperClientUtil.MC.level.getEntity(message.entityID);
+				Entity entity = SuperDuperUtil.getEntityByUUID(SuperDuperClientUtil.MC.level, message.entityUUID);
 				if(entity instanceof LivingEntity living) 
 				{
-					living.getCapability(SuperDuperCapabilities.OWNER).ifPresent(cap -> 
+					switch(message.type)
 					{
-						Entity owner = SuperDuperUtil.getEntityByUUID(living.level, message.ownerUUID);
-						if(owner instanceof LivingEntity livingOwner)
-						{
-							cap.setOwner(livingOwner);
-						}
-					});
+					case OWNER:
+						LivingEntity owner = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.ownerUUID);
+						SuperDuperUtil.setOwner(living, owner);
+						break;
+					case LAST_HURT_BY_MOB:
+						LivingEntity lastHurtByMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtByMobUUID);
+						SuperDuperUtil.setLastHurtByMob(living, lastHurtByMob);
+						break;
+					case LAST_HURT_MOB:
+						LivingEntity lastHurtMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtMobUUID);
+						SuperDuperUtil.setLastHurtMob(living, lastHurtMob);
+						break;
+					case COMMAND:
+						SuperDuperUtil.setCommand(living, message.command);
+						break;
+					default:
+						break;
+					}
 				}
 			});
 

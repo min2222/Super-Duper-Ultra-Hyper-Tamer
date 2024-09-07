@@ -20,6 +20,14 @@ public interface IOwnerCapability extends INBTSerializable<CompoundTag>
 	
 	Entity getOwner();
 	
+	void setLastHurtByMob(LivingEntity entity);
+	
+	LivingEntity getLastHurtByMob();
+	
+	void setLastHurtMob(LivingEntity entity);
+	
+	LivingEntity getLastHurtMob();
+	
 	void setCommand(int value);
 	
 	int getCommand();

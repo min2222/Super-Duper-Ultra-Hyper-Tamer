@@ -24,8 +24,11 @@ public class SuperDuperUltraHyperLeadItem extends Item
 	{
 		if(!(p_41400_ instanceof TamableAnimal))
 		{
-			SuperDuperUtil.tame(p_41400_, p_41399_);
-			return InteractionResult.SUCCESS;
+			if(!SuperDuperUtil.isTame(p_41400_))
+			{
+				SuperDuperUtil.tame(p_41400_, p_41399_);
+				return InteractionResult.SUCCESS;
+			}
 		}
 		else
 		{

@@ -28,7 +28,7 @@ public class SuperDuperOwnerHurtByTargetGoal extends TargetGoal
 	{
 		if(SuperDuperUtil.isTame(this.mob) && !SuperDuperUtil.isSit(this.mob))
 		{
-			LivingEntity livingentity = (LivingEntity) SuperDuperUtil.getOwner(this.mob);
+			LivingEntity livingentity = SuperDuperUtil.getOwner(this.mob);
 			if(livingentity == null)
 			{
 				return false;

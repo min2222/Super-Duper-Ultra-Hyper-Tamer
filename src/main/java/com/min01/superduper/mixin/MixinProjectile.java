@@ -28,11 +28,14 @@ public class MixinProjectile
 				if(hitResult instanceof EntityHitResult entityHit)
 				{
 					Entity entity = entityHit.getEntity();
-					if(SuperDuperUtil.isTame(living))
+					if(entity instanceof LivingEntity livingHit)
 					{
-						if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(living), living, entity))
+						if(SuperDuperUtil.isTame(living))
 						{
-							ci.cancel();
+							if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(living), living, livingHit))
+							{
+								ci.cancel();
+							}
 						}
 					}
 				}

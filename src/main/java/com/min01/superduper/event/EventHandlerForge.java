@@ -61,9 +61,9 @@ public class EventHandlerForge
 		Entity entity = event.getTarget();
 		if(entity instanceof LivingEntity living && !SuperDuperUtil.isBlacklisted(living))
 		{
-			if(!SuperDuperUtil.isTame(entity))
+			if(!SuperDuperUtil.isTame(living))
 			{
-				Item item = SuperDuperUtil.parseItemForTaming(entity);
+				Item item = SuperDuperUtil.parseItemForTaming(living);
 				if(item != null)
 				{
 					if(stack.is(item))
@@ -145,12 +145,15 @@ public class EventHandlerForge
 		LivingEntity living = event.getEntity();
 		if(entity != null)
 		{
-			if(SuperDuperUtil.isTame(entity))
+			if(entity instanceof LivingEntity attacker)
 			{
-				Entity owner = SuperDuperUtil.getOwner(entity);
-				if(SuperDuperUtil.isAllay(owner, entity, living))
+				if(SuperDuperUtil.isTame(attacker))
 				{
-					event.setCanceled(true);
+					Entity owner = SuperDuperUtil.getOwner(attacker);
+					if(SuperDuperUtil.isAllay(owner, attacker, living))
+					{
+						event.setCanceled(true);
+					}
 				}
 			}
 		}

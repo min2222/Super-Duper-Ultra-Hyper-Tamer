@@ -50,7 +50,7 @@ public class SuperDuperUtil
 		}
 	}
 	
-	public static double parseRideOffset(Entity entity)
+	public static double parseRideOffset(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.rideOffset.get();
@@ -66,7 +66,7 @@ public class SuperDuperUtil
 		return entity.getBbHeight() * 0.75D;
 	}
 	
-	public static float parseTameChance(Entity entity)
+	public static float parseTameChance(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.tameChance.get();
@@ -82,7 +82,7 @@ public class SuperDuperUtil
 		return 100.0F;
 	}
 	
-	public static boolean isBlacklisted(Entity entity)
+	public static boolean isBlacklisted(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.blackList.get();
@@ -93,7 +93,7 @@ public class SuperDuperUtil
 		return false;
 	}
 	
-	public static float parseMovementSpeed(Entity entity)
+	public static float parseMovementSpeed(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.movementSpeed.get();
@@ -110,7 +110,7 @@ public class SuperDuperUtil
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
-	public static <T extends ParticleOptions> ParticleOptions parseParticleForTaming(Entity entity)
+	public static <T extends ParticleOptions> ParticleOptions parseParticleForTaming(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.particleWhenTamed.get();
@@ -135,7 +135,7 @@ public class SuperDuperUtil
 		return ParticleTypes.HEART;
 	}
 	
-	public static Item parseItemForTaming(Entity entity)
+	public static Item parseItemForTaming(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
 		List<? extends String> list = SuperDuperConfig.tamingItems.get();
@@ -151,12 +151,12 @@ public class SuperDuperUtil
 		return null;
 	}
 	
-	public static boolean isAllay(Entity owner, Entity mob, Entity target)
+	public static boolean isAllay(LivingEntity owner, LivingEntity mob, LivingEntity target)
 	{
 		return owner == target || isSameOwner(mob, target);
 	}
 	
-	public static boolean isSameOwner(Entity entity, Entity target)
+	public static boolean isSameOwner(LivingEntity entity, LivingEntity target)
 	{
 		return isTame(target) ? getOwner(target) == getOwner(entity) : false;
 	}
@@ -165,39 +165,39 @@ public class SuperDuperUtil
 	//1 == follow
 	//2 == sit
 	
-	public static boolean isFollow(Entity entity)
+	public static boolean isFollow(LivingEntity entity)
 	{
 		return isTame(entity) && getCommand(entity) == 1;
 	}
 	
-	public static boolean isSit(Entity entity)
+	public static boolean isSit(LivingEntity entity)
 	{
 		return isTame(entity) && getCommand(entity) == 2;
 	}
 	
-	public static boolean isTame(Entity entity)
+	public static boolean isTame(LivingEntity entity)
 	{
 		return getOwner(entity) != null;
 	}
 	
-	public static void setCommand(Entity entiy, int command)
+	public static void setCommand(LivingEntity entiy, int command)
 	{
 		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setCommand(command);
 	}
 	
-	public static int getCommand(Entity entiy)
+	public static int getCommand(LivingEntity entiy)
 	{
 		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getCommand();
 	}
 	
-	public static void setOwner(Entity entiy, LivingEntity owner)
+	public static void setOwner(LivingEntity entiy, LivingEntity owner)
 	{
 		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setOwner(owner);
 	}
 	
-	public static Entity getOwner(Entity entiy)
+	public static LivingEntity getOwner(LivingEntity entiy)
 	{
-		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getOwner();
+		return (LivingEntity) entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getOwner();
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -20,10 +20,10 @@ public abstract class MixinLivingEntity extends MixinEntity
 	protected void isAlliedTo(Entity target, CallbackInfoReturnable<Boolean> cir)
 	{
 		LivingEntity living = LivingEntity.class.cast(this);
-		if(SuperDuperUtil.isTame(living))
+		if(SuperDuperUtil.isTame(living) && target instanceof LivingEntity livingTarget)
 		{
-			Entity owner = SuperDuperUtil.getOwner(living);
-			if(SuperDuperUtil.isAllay(owner, living, target))
+			LivingEntity owner = SuperDuperUtil.getOwner(living);
+			if(SuperDuperUtil.isAllay(owner, living, livingTarget))
 			{
 				cir.setReturnValue(true);
 			}

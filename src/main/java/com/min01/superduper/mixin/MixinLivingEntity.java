@@ -40,7 +40,7 @@ public abstract class MixinLivingEntity extends MixinEntity
 			{
 				if(SuperDuperUtil.getOwner(living) == living.getFirstPassenger())
 				{
-					cir.setReturnValue(SuperDuperUtil.parseMountOffset(living));
+					cir.setReturnValue(SuperDuperUtil.parseRideOffset(living));
 				}
 			}
 		}

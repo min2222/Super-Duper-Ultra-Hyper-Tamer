@@ -50,10 +50,10 @@ public class SuperDuperUtil
 		}
 	}
 	
-	public static double parseMountOffset(Entity entity)
+	public static double parseRideOffset(Entity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-		List<? extends String> list = SuperDuperConfig.mountOffset.get();
+		List<? extends String> list = SuperDuperConfig.rideOffset.get();
 		for(String string : list)
 		{
 			String mobId = string.split("=")[0];

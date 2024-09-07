@@ -44,7 +44,7 @@ public class EventHandlerForge
 				if(mob.getTarget() != null)
 				{
 					LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(mob);
-					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()) || owner.getLastHurtByMob() == null || owner.getLastHurtMob() == null)
+					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()))
 					{
 						mob.setTarget(null);
 					}

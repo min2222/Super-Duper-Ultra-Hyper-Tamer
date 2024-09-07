@@ -43,8 +43,8 @@ public class EventHandlerForge
 			{
 				if(mob.getTarget() != null)
 				{
-					Entity owner = SuperDuperUtil.getOwner(mob);
-					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()))
+					LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(mob);
+					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()) || owner.getLastHurtByMob() == null || owner.getLastHurtMob() == null)
 					{
 						mob.setTarget(null);
 					}
@@ -112,7 +112,7 @@ public class EventHandlerForge
 		LivingEntity living = event.getEntity();
 		if(SuperDuperUtil.isTame(living))
 		{
-			Entity owner = SuperDuperUtil.getOwner(living);
+			LivingEntity owner = SuperDuperUtil.getOwner(living);
 			if(!living.level.isClientSide && living.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && owner instanceof ServerPlayer) 
 			{
 				owner.sendSystemMessage(living.getCombatTracker().getDeathMessage());
@@ -149,7 +149,7 @@ public class EventHandlerForge
 			{
 				if(SuperDuperUtil.isTame(attacker))
 				{
-					Entity owner = SuperDuperUtil.getOwner(attacker);
+					LivingEntity owner = SuperDuperUtil.getOwner(attacker);
 					if(SuperDuperUtil.isAllay(owner, attacker, living))
 					{
 						event.setCanceled(true);
@@ -172,11 +172,14 @@ public class EventHandlerForge
 				if(hitResult instanceof EntityHitResult entityHit)
 				{
 					Entity entity = entityHit.getEntity();
-					if(SuperDuperUtil.isTame(living))
+					if(entity instanceof LivingEntity livingHit)
 					{
-						if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(living), living, entity))
+						if(SuperDuperUtil.isTame(living))
 						{
-							event.setCanceled(true);
+							if(SuperDuperUtil.isAllay(SuperDuperUtil.getOwner(living), living, livingHit))
+							{
+								event.setCanceled(true);
+							}
 						}
 					}
 				}

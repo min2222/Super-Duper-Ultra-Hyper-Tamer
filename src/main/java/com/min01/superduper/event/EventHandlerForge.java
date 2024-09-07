@@ -19,8 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,18 +30,20 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class EventHandlerForge
 {
 	@SubscribeEvent
-	public static void onLivingChangeTarget(LivingChangeTargetEvent event)
+	public static void onLivingTick(LivingTickEvent event)
 	{
 		LivingEntity living = event.getEntity();
-		Entity target = event.getNewTarget();
-		if(target != null && living != null)
+		if(SuperDuperUtil.isTame(living))
 		{
-			if(SuperDuperUtil.isTame(living))
+			if(living instanceof Mob mob)
 			{
-				LivingEntity owner = (LivingEntity) SuperDuperUtil.getOwner(living);
-				if(SuperDuperUtil.isAllay(owner, living, target))
+				if(mob.getTarget() != null)
 				{
-					event.setCanceled(true);
+					Entity owner = SuperDuperUtil.getOwner(mob);
+					if(SuperDuperUtil.isAllay(owner, mob, mob.getTarget()))
+					{
+						mob.setTarget(null);
+					}
 				}
 			}
 		}

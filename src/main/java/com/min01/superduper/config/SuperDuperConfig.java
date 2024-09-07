@@ -18,7 +18,7 @@ public class SuperDuperConfig
 	public static ConfigValue<List<? extends String>> blackList;
 	public static ConfigValue<List<? extends String>> tameChance;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
-	public static ConfigValue<List<? extends String>> mountOffset;
+	public static ConfigValue<List<? extends String>> rideOffset;
 	public static ConfigValue<List<? extends String>> tamingItems;
 	public static ConfigValue<List<? extends String>> movementSpeed;
     
@@ -51,7 +51,7 @@ public class SuperDuperConfig
     	SuperDuperConfig.particleWhenTamed = config.comment("particle for when successfully tamed mobs. example : minecraft:husk=minecraft:damage_indicator").define("particleWhenTamed", Arrays.asList(new String[] {
     			"minecraft:husk=minecraft:damage_indicator"
     	}), String.class::isInstance);
-    	SuperDuperConfig.mountOffset = config.comment("y offset of passenger when mount tamed mob. example : minecraft:husk=0.5").define("mountOffset", Arrays.asList(new String[] {}), String.class::isInstance);
+    	SuperDuperConfig.rideOffset = config.comment("y offset of passenger when ride tamed mob. example : minecraft:husk=0.5").define("mountOffset", Arrays.asList(new String[] {}), String.class::isInstance);
         config.pop();
         
     	config.push("Common Settings");

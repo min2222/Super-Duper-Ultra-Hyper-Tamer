@@ -64,29 +64,44 @@ public class UpdateOwnerCapabilityPacket
 		{
 			ctx.get().enqueueWork(() ->
 			{
-				Entity entity = SuperDuperUtil.getEntityByUUID(SuperDuperClientUtil.MC.level, message.entityUUID);
-				if(entity instanceof LivingEntity living) 
+				if(ctx.get().getDirection().getReceptionSide().isClient())
 				{
-					switch(message.type)
+					SuperDuperClientUtil.MC.doRunTask(() -> 
 					{
-					case OWNER:
-						LivingEntity owner = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.ownerUUID);
-						SuperDuperUtil.setOwner(living, owner);
-						break;
-					case LAST_HURT_BY_MOB:
-						LivingEntity lastHurtByMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtByMobUUID);
-						SuperDuperUtil.setLastHurtByMob(living, lastHurtByMob);
-						break;
-					case LAST_HURT_MOB:
-						LivingEntity lastHurtMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtMobUUID);
-						SuperDuperUtil.setLastHurtMob(living, lastHurtMob);
-						break;
-					case COMMAND:
-						SuperDuperUtil.setCommand(living, message.command);
-						break;
-					default:
-						break;
-					}
+						Entity entity = SuperDuperUtil.getEntityByUUID(SuperDuperClientUtil.MC.level, message.entityUUID);
+						if(entity instanceof LivingEntity living) 
+						{
+							switch(message.type)
+							{
+							case OWNER:
+								Entity entity1 = SuperDuperUtil.getEntityByUUID(living.level, message.ownerUUID);
+								if(entity1 instanceof LivingEntity owner)
+								{
+									SuperDuperUtil.setOwner(living, owner);
+								}
+								break;
+							case LAST_HURT_BY_MOB:
+								Entity entity2 = SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtByMobUUID);
+								if(entity2 instanceof LivingEntity lastHurtByMob)
+								{
+									SuperDuperUtil.setLastHurtByMob(living, lastHurtByMob);
+								}
+								break;
+							case LAST_HURT_MOB:
+								Entity entity3 = SuperDuperUtil.getEntityByUUID(living.level, message.lastHurtMobUUID);
+								if(entity3 instanceof LivingEntity lastHurtMob)
+								{
+									SuperDuperUtil.setLastHurtMob(living, lastHurtMob);
+								}
+								break;
+							case COMMAND:
+								SuperDuperUtil.setCommand(living, message.command);
+								break;
+							default:
+								break;
+							}
+						}
+					});
 				}
 			});
 

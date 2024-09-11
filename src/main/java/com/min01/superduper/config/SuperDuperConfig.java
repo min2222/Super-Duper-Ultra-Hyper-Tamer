@@ -17,6 +17,7 @@ public class SuperDuperConfig
 
 	public static ConfigValue<List<? extends String>> blackList;
 	public static ConfigValue<List<? extends String>> tameChance;
+	public static ForgeConfigSpec.BooleanValue forceTame;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
 	public static ConfigValue<List<? extends String>> rideOffset;
 	public static ConfigValue<List<? extends String>> tamingItems;
@@ -45,6 +46,7 @@ public class SuperDuperConfig
     	SuperDuperConfig.tameChance = config.comment("tame success chance for mobs. example : minecraft:husk=80.0").define("tameChance", Arrays.asList(new String[] {
     			"minecraft:husk=80.0"
     	}), String.class::isInstance);
+    	SuperDuperConfig.forceTame = config.comment("enable force tame, which is able to tame any mob even if it's already tamable with other method").define("forceTame", true);
         config.pop();
     	
     	config.push("Client Settings");

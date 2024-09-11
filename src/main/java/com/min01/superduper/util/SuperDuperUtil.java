@@ -7,8 +7,6 @@ import java.util.UUID;
 import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
-import com.min01.superduper.capabilities.OwnerCapabilityImpl;
-import com.min01.superduper.capabilities.SuperDuperCapabilities;
 import com.min01.superduper.config.SuperDuperConfig;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -183,42 +181,66 @@ public class SuperDuperUtil
 	
 	public static void setCommand(LivingEntity entity, int command)
 	{
-		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setCommand(command);
+		entity.getPersistentData().putInt("Command", command);
 	}
 	
 	public static int getCommand(LivingEntity entity)
 	{
-		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getCommand();
+		return entity.getPersistentData().getInt("Command");
 	}
 	
 	public static void setLastHurtByMob(LivingEntity entity, LivingEntity mob)
 	{
-		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtByMob(mob);
+		entity.getPersistentData().putUUID("LastHurtByMobUUID", mob.getUUID());
 	}
 	
 	public static LivingEntity getLastHurtByMob(LivingEntity entity)
 	{
-		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtByMob();
+		if(entity.getPersistentData().contains("LastHurtByMobUUID"))
+		{
+			Entity lastHurtByMob = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("LastHurtByMobUUID"));
+			if(lastHurtByMob instanceof LivingEntity living)
+			{
+				return living;
+			}
+		}
+		return null;
 	}
 	
 	public static void setLastHurtMob(LivingEntity entity, LivingEntity mob)
 	{
-		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtMob(mob);
+		entity.getPersistentData().putUUID("LastHurtMobUUID", mob.getUUID());
 	}
 	
 	public static LivingEntity getLastHurtMob(LivingEntity entity)
 	{
-		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtMob();
+		if(entity.getPersistentData().contains("LastHurtMobUUID"))
+		{
+			Entity lastHurtMob = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("LastHurtMobUUID"));
+			if(lastHurtMob instanceof LivingEntity living)
+			{
+				return living;
+			}
+		}
+		return null;
 	}
 	
 	public static void setOwner(LivingEntity entity, LivingEntity owner)
 	{
-		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setOwner(owner);
+		entity.getPersistentData().putUUID("OwnerUUID", owner.getUUID());
 	}
 	
 	public static LivingEntity getOwner(LivingEntity entity)
 	{
-		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getOwner();
+		if(entity.getPersistentData().contains("OwnerUUID"))
+		{
+			Entity owner = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("OwnerUUID"));
+			if(owner instanceof LivingEntity living)
+			{
+				return living;
+			}
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")

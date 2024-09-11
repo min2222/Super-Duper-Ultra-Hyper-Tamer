@@ -42,6 +42,7 @@ public class SuperDuperUtil
 			}
 			if(pet instanceof Mob mob)
 			{
+				mob.setPersistenceRequired();
 				mob.setTarget(null);
 				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, parseMovementSpeed(mob), 4.0F, 2.0F, true));
 				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
@@ -180,44 +181,44 @@ public class SuperDuperUtil
 		return getOwner(entity) != null;
 	}
 	
-	public static void setCommand(LivingEntity entiy, int command)
+	public static void setCommand(LivingEntity entity, int command)
 	{
-		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setCommand(command);
+		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setCommand(command);
 	}
 	
-	public static int getCommand(LivingEntity entiy)
+	public static int getCommand(LivingEntity entity)
 	{
-		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getCommand();
+		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getCommand();
 	}
 	
-	public static void setLastHurtByMob(LivingEntity entiy, LivingEntity mob)
+	public static void setLastHurtByMob(LivingEntity entity, LivingEntity mob)
 	{
-		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtByMob(mob);
+		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtByMob(mob);
 	}
 	
-	public static LivingEntity getLastHurtByMob(LivingEntity entiy)
+	public static LivingEntity getLastHurtByMob(LivingEntity entity)
 	{
-		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtByMob();
+		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtByMob();
 	}
 	
-	public static void setLastHurtMob(LivingEntity entiy, LivingEntity mob)
+	public static void setLastHurtMob(LivingEntity entity, LivingEntity mob)
 	{
-		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtMob(mob);
+		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setLastHurtMob(mob);
 	}
 	
-	public static LivingEntity getLastHurtMob(LivingEntity entiy)
+	public static LivingEntity getLastHurtMob(LivingEntity entity)
 	{
-		return entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtMob();
+		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getLastHurtMob();
 	}
 	
-	public static void setOwner(LivingEntity entiy, LivingEntity owner)
+	public static void setOwner(LivingEntity entity, LivingEntity owner)
 	{
-		entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setOwner(owner);
+		entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).setOwner(owner);
 	}
 	
-	public static LivingEntity getOwner(LivingEntity entiy)
+	public static LivingEntity getOwner(LivingEntity entity)
 	{
-		return (LivingEntity) entiy.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getOwner();
+		return entity.getCapability(SuperDuperCapabilities.OWNER).orElseGet(() -> new OwnerCapabilityImpl()).getOwner();
 	}
 	
 	@SuppressWarnings("unchecked")

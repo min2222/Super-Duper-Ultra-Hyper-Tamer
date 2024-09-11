@@ -45,15 +45,27 @@ public class OwnerCapabilityImpl implements IOwnerCapability
 	{
 		if(nbt.contains("OwnerUUID"))
 		{
-			this.owner = (LivingEntity) SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("OwnerUUID"));
+			Entity entity = SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("OwnerUUID"));
+			if(entity instanceof LivingEntity living)
+			{
+				this.owner = living;
+			}
 		}
 		if(nbt.contains("LastHurtByMobUUID"))
 		{
-			this.lastHurtByMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("LastHurtByMobUUID"));
+			Entity entity = SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("LastHurtByMobUUID"));
+			if(entity instanceof LivingEntity living)
+			{
+				this.lastHurtByMob = living;
+			}
 		}
 		if(nbt.contains("LastHurtMobUUID"))
 		{
-			this.lastHurtMob = (LivingEntity) SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("LastHurtMobUUID"));
+			Entity entity = SuperDuperUtil.getEntityByUUID(this.entity.level, nbt.getUUID("LastHurtMobUUID"));
+			if(entity instanceof LivingEntity living)
+			{
+				this.lastHurtMob = living;
+			}
 		}
 		if(nbt.contains("Command"))
 		{
@@ -75,7 +87,7 @@ public class OwnerCapabilityImpl implements IOwnerCapability
 	}
 	
 	@Override
-	public Entity getOwner() 
+	public LivingEntity getOwner() 
 	{
 		return this.owner;
 	}

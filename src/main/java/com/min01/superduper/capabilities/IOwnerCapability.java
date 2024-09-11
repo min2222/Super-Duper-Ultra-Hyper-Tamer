@@ -4,7 +4,6 @@ import com.min01.superduper.SuperDuperUltraHyperTamer;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.AutoRegisterCapability;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -18,7 +17,7 @@ public interface IOwnerCapability extends INBTSerializable<CompoundTag>
 	
 	void setOwner(LivingEntity entity);
 	
-	Entity getOwner();
+	LivingEntity getOwner();
 	
 	void setLastHurtByMob(LivingEntity entity);
 	

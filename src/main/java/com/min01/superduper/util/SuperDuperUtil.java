@@ -43,7 +43,7 @@ public class SuperDuperUtil
 			if(pet instanceof Mob mob)
 			{
 				mob.setTarget(null);
-				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
+				mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, parseMovementSpeed(mob), 4.0F, 2.0F, true));
 				mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 			}

@@ -15,13 +15,14 @@ public class SuperDuperConfig
     private static ForgeConfigSpec.Builder BUILDER;
     public static ForgeConfigSpec CONFIG;
 
-	public static ConfigValue<List<? extends String>> blackList;
+	public static ConfigValue<List<? extends String>> blacklist;
 	public static ConfigValue<List<? extends String>> tameChance;
 	public static ForgeConfigSpec.BooleanValue forceTame;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
 	public static ConfigValue<List<? extends String>> rideOffset;
 	public static ConfigValue<List<? extends String>> tamingItems;
 	public static ConfigValue<List<? extends String>> movementSpeed;
+	public static ConfigValue<List<? extends String>> ridingBlacklist;
     
     public static void loadConfig(ForgeConfigSpec config, String path) 
     {
@@ -40,7 +41,7 @@ public class SuperDuperConfig
     public static void init(ForgeConfigSpec.Builder config) 
     {
     	config.push("Balance Settings");
-    	SuperDuperConfig.blackList = config.comment("blacklisted mobs can't be tamed. example : minecraft:warden").define("blackList", Arrays.asList(new String[] {
+    	SuperDuperConfig.blacklist = config.comment("blacklisted mobs can't be tamed. example : minecraft:warden").define("blacklist", Arrays.asList(new String[] {
     			"minecraft:warden"
     	}), String.class::isInstance);
     	SuperDuperConfig.tameChance = config.comment("tame success chance for mobs. example : minecraft:husk=80.0").define("tameChance", Arrays.asList(new String[] {
@@ -63,6 +64,7 @@ public class SuperDuperConfig
     	SuperDuperConfig.movementSpeed = config.comment("movementSpeed for when pets following owner or controlled by owner. example : minecraft:husk=1.3").define("movementSpeed", Arrays.asList(new String[] {
     			"minecraft:husk=1.3"
     	}), String.class::isInstance);
+    	SuperDuperConfig.ridingBlacklist = config.comment("disable riding of specific mob. example : minecraft:husk").define("ridingBlacklist", Arrays.asList(new String[] {}), String.class::isInstance);
         config.pop();
     }
 }

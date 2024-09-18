@@ -81,10 +81,21 @@ public class SuperDuperUtil
 		return 100.0F;
 	}
 	
+	public static boolean isRidingBlacklisted(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.ridingBlacklist.get();
+		if(!list.isEmpty())
+		{
+			return list.contains(location.toString());
+		}
+		return false;
+	}
+	
 	public static boolean isBlacklisted(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-		List<? extends String> list = SuperDuperConfig.blackList.get();
+		List<? extends String> list = SuperDuperConfig.blacklist.get();
 		if(!list.isEmpty())
 		{
 			return list.contains(location.toString());
@@ -163,6 +174,11 @@ public class SuperDuperUtil
 	//0 == wandering
 	//1 == follow
 	//2 == sit
+	
+	public static boolean isWandering(LivingEntity entity)
+	{
+		return isTame(entity) && getCommand(entity) == 0;
+	}
 	
 	public static boolean isFollow(LivingEntity entity)
 	{

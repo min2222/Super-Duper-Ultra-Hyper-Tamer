@@ -4,9 +4,10 @@ import com.min01.superduper.config.SuperDuperConfig;
 import com.min01.superduper.item.SuperDuperItems;
 
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
 
 @Mod(SuperDuperUltraHyperTamer.MODID)
 public class SuperDuperUltraHyperTamer 
@@ -16,8 +17,9 @@ public class SuperDuperUltraHyperTamer
 	public SuperDuperUltraHyperTamer() 
 	{
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext ctx = ModLoadingContext.get();
 		SuperDuperItems.ITEMS.register(bus);
 		
-		SuperDuperConfig.loadConfig(SuperDuperConfig.CONFIG, FMLPaths.CONFIGDIR.get().resolve("super-duper-tamer.toml").toString());
+		ctx.registerConfig(Type.COMMON, SuperDuperConfig.CONFIG_SPEC, "super-duper-tamer.toml");
 	}
 }

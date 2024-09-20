@@ -103,6 +103,27 @@ public class SuperDuperUtil
 		return false;
 	}
 	
+	public static boolean isInAttackRange(LivingEntity entity, Entity target)
+	{
+		return entity.distanceTo(target) <= parseAttackRange(entity);
+	}
+	
+	public static float parseAttackRange(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.attackRange.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String speed = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(speed);
+			}
+		}
+		return 1000.0F;
+	}
+	
 	public static float parseMovementSpeed(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());

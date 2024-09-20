@@ -45,20 +45,22 @@ public class EventHandlerForge
 				if(mob.getTarget() != null)
 				{
 					LivingEntity target = mob.getTarget();
-					if(SuperDuperUtil.getLastHurtByMob(mob) == null || SuperDuperUtil.getLastHurtMob(mob) == null || SuperDuperUtil.isAllay(owner, mob, target) || !SuperDuperUtil.isWandering(mob))
+					if(SuperDuperUtil.getLastHurtByMob(mob) == null || SuperDuperUtil.getLastHurtMob(mob) == null || SuperDuperUtil.isAllay(owner, mob, target))
 					{
 						mob.setTarget(null);
 					}
 					if(SuperDuperUtil.getLastHurtByMob(mob) != null)
 					{
-						if(target != SuperDuperUtil.getLastHurtByMob(mob) || !SuperDuperUtil.isWandering(mob))
+						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
+						if(target != SuperDuperUtil.getLastHurtByMob(mob) || flag)
 						{
 							mob.setTarget(null);
 						}
 					}
 					if(SuperDuperUtil.getLastHurtMob(mob) != null)
 					{
-						if(target != SuperDuperUtil.getLastHurtMob(mob) || !SuperDuperUtil.isWandering(mob))
+						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
+						if(target != SuperDuperUtil.getLastHurtMob(mob) || flag)
 						{
 							mob.setTarget(null);
 						}
@@ -66,18 +68,24 @@ public class EventHandlerForge
 				}
 				if(owner.getLastHurtByMob() != null)
 				{
-					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtByMob()) && SuperDuperUtil.isWandering(mob))
+					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtByMob()))
 					{
-						mob.setTarget(owner.getLastHurtByMob());
-						SuperDuperUtil.setLastHurtByMob(mob, owner.getLastHurtByMob());
+						if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtByMob()))
+						{
+							mob.setTarget(owner.getLastHurtByMob());
+							SuperDuperUtil.setLastHurtByMob(mob, owner.getLastHurtByMob());
+						}
 					}
 				}
 				if(owner.getLastHurtMob() != null)
 				{
-					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtMob()) && SuperDuperUtil.isWandering(mob))
+					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtMob()))
 					{
-						mob.setTarget(owner.getLastHurtMob());
-						SuperDuperUtil.setLastHurtMob(mob, owner.getLastHurtMob());
+						if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtMob()))
+						{
+							mob.setTarget(owner.getLastHurtMob());
+							SuperDuperUtil.setLastHurtMob(mob, owner.getLastHurtMob());
+						}
 					}
 				}
 			}

@@ -1,9 +1,6 @@
 package com.min01.superduper.event;
 
 import com.min01.superduper.SuperDuperUltraHyperTamer;
-import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
-import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
-import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
 import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -155,24 +151,6 @@ public class EventHandlerForge
 			if(!living.level.isClientSide && living.level.getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES) && owner instanceof ServerPlayer) 
 			{
 				owner.sendSystemMessage(living.getCombatTracker().getDeathMessage());
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onEntityJoinLevel(EntityJoinLevelEvent event)
-	{
-		Entity entity = event.getEntity();
-		if(entity instanceof LivingEntity living)
-		{
-			if(SuperDuperUtil.isTame(living))
-			{
-				if(living instanceof Mob mob)
-				{
-					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
-					mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
-					mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
-				}
 			}
 		}
 	}

@@ -6,7 +6,8 @@
 	"mixins": [
 		"MixinLivingEntity",
 		"MixinEntity",
-		"MixinProjectile"
+		"MixinProjectile",
+		"MixinMob"
 	],
 	"client": [],
 	"server": [],

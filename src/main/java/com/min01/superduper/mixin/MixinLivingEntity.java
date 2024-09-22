@@ -22,7 +22,7 @@ public abstract class MixinLivingEntity extends MixinEntity
 	private void addAdditionalSaveData(CompoundTag tag, CallbackInfo ci)
 	{
 		LivingEntity living = LivingEntity.class.cast(this);
-		if(SuperDuperUtil.getOwner(living) != null)
+		if(SuperDuperUtil.isTame(living))
 		{
 			tag.putUUID("OwnerUUID", SuperDuperUtil.getOwner(living).getUUID());
 		}

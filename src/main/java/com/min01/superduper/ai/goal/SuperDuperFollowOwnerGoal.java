@@ -114,7 +114,7 @@ public class SuperDuperFollowOwnerGoal extends Goal
 			this.timeToRecalcPath = this.adjustedTickDelay(10);
 			if(!this.mob.isLeashed() && !this.mob.isPassenger())
 			{
-				if(this.mob.distanceToSqr(this.owner) >= 144.0D)
+				if(this.mob.distanceToSqr(this.owner) >= SuperDuperUtil.parseTeleportRange(this.mob))
 				{
 					this.teleportToOwner();
 				} 

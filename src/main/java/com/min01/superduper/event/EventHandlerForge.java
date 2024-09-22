@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -42,50 +44,83 @@ public class EventHandlerForge
 			if(living instanceof Mob mob)
 			{
 				LivingEntity owner = SuperDuperUtil.getOwner(mob);
-				if(mob.getTarget() != null)
+				if(!mob.level.isClientSide)
 				{
-					LivingEntity target = mob.getTarget();
-					if(SuperDuperUtil.getLastHurtByMob(mob) == null || SuperDuperUtil.getLastHurtMob(mob) == null || SuperDuperUtil.isAllay(owner, mob, target))
+					if(mob.getTarget() == null)
 					{
-						mob.setTarget(null);
+						if(owner.getLastHurtByMob() != null)
+						{
+							if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtByMob()))
+							{
+								if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtByMob()))
+								{
+									mob.setTarget(owner.getLastHurtByMob());
+									SuperDuperUtil.setLastHurtByMob(mob, owner.getLastHurtByMob());
+								}
+							}
+						}
+						if(owner.getLastHurtMob() != null)
+						{
+							if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtMob()))
+							{
+								if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtMob()))
+								{
+									mob.setTarget(owner.getLastHurtMob());
+									SuperDuperUtil.setLastHurtMob(mob, owner.getLastHurtMob());
+								}
+							}
+						}
 					}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onLivingChangeTarget(LivingChangeTargetEvent event)
+	{
+		LivingEntity living = event.getEntity();
+		LivingEntity target = event.getOriginalTarget();
+		if(target != null)
+		{
+			if(SuperDuperUtil.isTame(living))
+			{
+				if(living instanceof Mob mob)
+				{
+					LivingEntity owner = SuperDuperUtil.getOwner(mob);
 					if(SuperDuperUtil.getLastHurtByMob(mob) != null)
 					{
 						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
 						if(target != SuperDuperUtil.getLastHurtByMob(mob) || flag)
 						{
-							mob.setTarget(null);
+							event.setCanceled(true);
 						}
+					}
+					else if(SuperDuperUtil.isAllay(owner, mob, target))
+					{
+						event.setCanceled(true);
 					}
 					if(SuperDuperUtil.getLastHurtMob(mob) != null)
 					{
 						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
 						if(target != SuperDuperUtil.getLastHurtMob(mob) || flag)
 						{
-							mob.setTarget(null);
+							event.setCanceled(true);
 						}
 					}
-				}
-				if(owner.getLastHurtByMob() != null)
-				{
-					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtByMob()))
+					else if(SuperDuperUtil.isAllay(owner, mob, target))
 					{
-						if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtByMob()))
-						{
-							mob.setTarget(owner.getLastHurtByMob());
-							SuperDuperUtil.setLastHurtByMob(mob, owner.getLastHurtByMob());
-						}
+						event.setCanceled(true);
 					}
 				}
-				if(owner.getLastHurtMob() != null)
+			}
+			if(living instanceof TamableAnimal animal)
+			{
+				if(animal.getOwner() != null)
 				{
-					if(!SuperDuperUtil.isAllay(owner, mob, owner.getLastHurtMob()))
+					if(SuperDuperUtil.isAllay(animal.getOwner(), animal, target))
 					{
-						if(SuperDuperUtil.isWandering(mob) || SuperDuperUtil.isInAttackRange(mob, owner.getLastHurtMob()))
-						{
-							mob.setTarget(owner.getLastHurtMob());
-							SuperDuperUtil.setLastHurtMob(mob, owner.getLastHurtMob());
-						}
+						event.setCanceled(true);
 					}
 				}
 			}

@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.LevelEntityGetter;
@@ -232,12 +233,12 @@ public class SuperDuperUtil
 	
 	public static boolean isAllay(LivingEntity owner, LivingEntity mob, LivingEntity target)
 	{
-		return owner == target || isSameOwner(mob, target);
+		return owner == target || isSameOwner(mob, target) || (target instanceof TamableAnimal animal && animal.isOwnedBy(owner));
 	}
 	
 	public static boolean isSameOwner(LivingEntity entity, LivingEntity target)
 	{
-		return isTame(target) ? getOwner(target) == getOwner(entity) : false;
+		return isTame(target) ? getOwner(target) == getOwner(entity) || (entity instanceof TamableAnimal animal && animal.getOwner() != null && animal.getOwner() == getOwner(target)) : false;
 	}
 	
 	//0 == wandering

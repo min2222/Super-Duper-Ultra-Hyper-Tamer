@@ -65,6 +65,38 @@ public class SuperDuperUtil
 		return entity.getBbHeight() * 0.75D;
 	}
 	
+	public static Item parseHealItem(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.healItem.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String itemId = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId));
+			}
+		}
+		return null;
+	}
+	
+	public static float parseHealAmount(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.healAmount.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String amount = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(amount);
+			}
+		}
+		return 1.0F;
+	}
+	
 	public static float parseTameChance(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
@@ -108,6 +140,22 @@ public class SuperDuperUtil
 		return entity.distanceTo(target) <= parseAttackRange(entity);
 	}
 	
+	public static float parseTeleportRange(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.teleportRange.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String range = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(range);
+			}
+		}
+		return 144.0F;
+	}
+	
 	public static float parseAttackRange(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
@@ -115,10 +163,10 @@ public class SuperDuperUtil
 		for(String string : list)
 		{
 			String mobId = string.split("=")[0];
-			String speed = string.split("=")[1];
+			String range = string.split("=")[1];
 			if(location.toString().equals(mobId))
 			{
-				return Float.valueOf(speed);
+				return Float.valueOf(range);
 			}
 		}
 		return 1000.0F;

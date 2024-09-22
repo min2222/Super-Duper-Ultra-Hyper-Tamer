@@ -16,12 +16,15 @@ public class SuperDuperConfig
 	public static ConfigValue<List<? extends String>> blacklist;
 	public static ConfigValue<List<? extends String>> tameChance;
 	public static ForgeConfigSpec.BooleanValue forceTame;
+	public static ConfigValue<List<? extends String>> healItem;
+	public static ConfigValue<List<? extends String>> healAmount;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
 	public static ConfigValue<List<? extends String>> rideOffset;
 	public static ConfigValue<List<? extends String>> tamingItems;
 	public static ConfigValue<List<? extends String>> movementSpeed;
 	public static ConfigValue<List<? extends String>> ridingBlacklist;
 	public static ConfigValue<List<? extends String>> attackRange;
+	public static ConfigValue<List<? extends String>> teleportRange;
 
     static 
     {
@@ -40,6 +43,12 @@ public class SuperDuperConfig
     			"minecraft:husk=80.0"
     	}), String.class::isInstance);
     	SuperDuperConfig.forceTame = config.comment("enable force tame, which is able to tame any mob even if it's already tamable with other method").define("forceTame", true);
+    	SuperDuperConfig.healItem = config.comment("heal item for tamed mob. example : minecraft:husk=minecraft:rotten_flesh").defineList("healItem", Arrays.asList(new String[] {
+    			"minecraft:husk=minecraft:rotten_flesh"
+    	}), String.class::isInstance);
+    	SuperDuperConfig.healAmount = config.comment("heal amount for tamed mob. example : minecraft:husk=1.0").defineList("healAmount", Arrays.asList(new String[] {
+    			"minecraft:husk=1.0"
+    	}), String.class::isInstance);
         config.pop();
     	
     	config.push("Client Settings");
@@ -58,6 +67,7 @@ public class SuperDuperConfig
     	}), String.class::isInstance);
     	SuperDuperConfig.ridingBlacklist = config.comment("disable riding of specific mob. example : minecraft:husk").defineList("ridingBlacklist", Arrays.asList(new String[] {}), String.class::isInstance);
     	SuperDuperConfig.attackRange = config.comment("minimum range for tamed mob attack target while in following state. example : minecraft:husk=3.5").defineList("attackRange", Arrays.asList(new String[] {}), String.class::isInstance);
+    	SuperDuperConfig.teleportRange = config.comment("minimum range for tamed mob teleport to owner. example : minecraft:husk=10.0").defineList("teleportRange", Arrays.asList(new String[] {}), String.class::isInstance);
         config.pop();
     }
 }

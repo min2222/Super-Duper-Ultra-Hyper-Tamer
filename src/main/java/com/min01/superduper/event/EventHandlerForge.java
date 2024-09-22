@@ -1,6 +1,9 @@
 package com.min01.superduper.event;
 
 import com.min01.superduper.SuperDuperUltraHyperTamer;
+import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
+import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
+import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
 import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -17,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -89,6 +93,24 @@ public class EventHandlerForge
 	}
 	
 	@SubscribeEvent
+	public static void onEntityJoinLevel(EntityJoinLevelEvent event)
+	{
+		Entity entity = event.getEntity();
+		if(entity instanceof LivingEntity living)
+		{
+			if(living instanceof Mob mob)
+			{
+				if(!mob.level.isClientSide)
+				{
+					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
+					mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
+					mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
 	public static void onEntityInteract(PlayerInteractEvent.EntityInteract event)
 	{
 		Player player = event.getEntity();
@@ -133,9 +155,32 @@ public class EventHandlerForge
 					SuperDuperUtil.setCommand(living, command >= 3 ? 0 : command);
 	                player.displayClientMessage(Component.translatable("entity.superduper.all.command_" + SuperDuperUtil.getCommand(living), living.getName()), true);
 				}
-				else if(!SuperDuperUtil.isRidingBlacklisted(living))
+				else
 				{
-					player.startRiding(living);
+					if(player.getMainHandItem().isEmpty())
+					{
+						if(!SuperDuperUtil.isRidingBlacklisted(living))
+						{
+							player.startRiding(living);
+						}
+					}
+					else
+					{
+						Item item = SuperDuperUtil.parseHealItem(living);
+						if(item != null)
+						{
+							if(stack.is(item))
+							{
+								float amount = SuperDuperUtil.parseHealAmount(living);
+								living.heal(amount);
+								if(!player.getAbilities().instabuild)
+								{
+									stack.shrink(1);
+								}
+								event.setCancellationResult(InteractionResult.PASS);
+							}
+						}
+					}
 				}
 			}
 		}

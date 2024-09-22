@@ -5,8 +5,7 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"MixinLivingEntity",
-		"MixinEntity",
-		"MixinMob"
+		"MixinEntity"
 	],
 	"client": [],
 	"server": [],

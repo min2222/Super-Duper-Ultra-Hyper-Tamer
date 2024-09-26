@@ -96,10 +96,11 @@ public class EventHandlerForge
 							event.setCanceled(true);
 						}
 					}
-					else if(SuperDuperUtil.isAllay(owner, mob, target))
+					if(SuperDuperUtil.isAllay(owner, mob, target) || SuperDuperUtil.getLastHurtByMob(mob) == null)
 					{
 						event.setCanceled(true);
 					}
+					
 					if(SuperDuperUtil.getLastHurtMob(mob) != null)
 					{
 						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
@@ -108,7 +109,8 @@ public class EventHandlerForge
 							event.setCanceled(true);
 						}
 					}
-					else if(SuperDuperUtil.isAllay(owner, mob, target))
+					
+					if(SuperDuperUtil.isAllay(owner, mob, target) || SuperDuperUtil.getLastHurtMob(mob) == null)
 					{
 						event.setCanceled(true);
 					}

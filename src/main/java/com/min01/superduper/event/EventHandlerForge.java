@@ -96,6 +96,7 @@ public class EventHandlerForge
 							event.setCanceled(true);
 						}
 					}
+					
 					if(SuperDuperUtil.isAllay(owner, mob, target) || SuperDuperUtil.getLastHurtByMob(mob) == null)
 					{
 						event.setCanceled(true);

@@ -31,13 +31,13 @@ public class TameCommand
 		{
 			if(pet instanceof LivingEntity living)
 			{
-				//stack.sendFailure(() -> Component.literal("Unable to tame " + pet.getDisplayName().getString() + ", it's already tamed."));
+				//stack.sendFailure(Component.literal("Unable to tame " + pet.getDisplayName().getString() + ", it's already tamed."));
 				SuperDuperUtil.tame(living, owner);
 				stack.sendSuccess(() -> Component.literal("Tamed " + living.getDisplayName().getString() + " as owner of " + owner.getDisplayName().getString()), true);
 			}
 			else
 			{
-				stack.sendFailure(() -> Component.literal("Unable to tame " + pet.getDisplayName().getString() + ", it's not a living entity."));
+				stack.sendFailure(Component.literal("Unable to tame " + pet.getDisplayName().getString() + ", it's not a living entity."));
 			}
 		}
 		return pets.size();

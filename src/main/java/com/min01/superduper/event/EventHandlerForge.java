@@ -4,6 +4,7 @@ import com.min01.superduper.SuperDuperUltraHyperTamer;
 import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
+import com.min01.superduper.command.TameCommand;
 import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -35,6 +37,12 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 @Mod.EventBusSubscriber(modid = SuperDuperUltraHyperTamer.MODID, bus = Bus.FORGE)
 public class EventHandlerForge
 {
+    @SubscribeEvent
+    public static void onRegisterCommands(RegisterCommandsEvent event)
+    {
+    	TameCommand.register(event.getDispatcher());
+    }
+    
 	@SubscribeEvent
 	public static void onLivingTick(LivingTickEvent event)
 	{

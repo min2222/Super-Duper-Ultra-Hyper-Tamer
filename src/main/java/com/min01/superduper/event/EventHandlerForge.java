@@ -22,7 +22,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -43,9 +42,9 @@ public class EventHandlerForge
 	public static void onLivingTick(LivingTickEvent event)
 	{
 		LivingEntity living = event.getEntity();
-		if(SuperDuperUtil.isTame(living))
+		if(living instanceof Mob mob)
 		{
-			if(living instanceof Mob mob)
+			if(SuperDuperUtil.isTame(mob))
 			{
 				LivingEntity owner = SuperDuperUtil.getOwner(mob);
 				if(!mob.level.isClientSide)
@@ -75,59 +74,48 @@ public class EventHandlerForge
 							}
 						}
 					}
-				}
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onLivingChangeTarget(LivingChangeTargetEvent event)
-	{
-		LivingEntity living = event.getEntity();
-		LivingEntity target = event.getOriginalTarget();
-		if(target != null)
-		{
-			if(SuperDuperUtil.isTame(living))
-			{
-				if(living instanceof Mob mob)
-				{
-					LivingEntity owner = SuperDuperUtil.getOwner(mob);
-					if(SuperDuperUtil.getLastHurtByMob(mob) != null)
+					else
 					{
-						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
-						if(target != SuperDuperUtil.getLastHurtByMob(mob) || flag)
+						LivingEntity target = mob.getTarget();
+						if(SuperDuperUtil.getLastHurtByMob(mob) != null)
 						{
-							event.setCanceled(true);
+							if(target != SuperDuperUtil.getLastHurtByMob(mob))
+							{
+								mob.setTarget(null);
+							}
 						}
-					}
-					
-					if(SuperDuperUtil.isAllay(owner, mob, target) || SuperDuperUtil.getLastHurtByMob(mob) == null)
-					{
-						event.setCanceled(true);
-					}
-					
-					if(SuperDuperUtil.getLastHurtMob(mob) != null)
-					{
-						boolean flag = SuperDuperUtil.isFollow(mob) && !SuperDuperUtil.isInAttackRange(mob, target);
-						if(target != SuperDuperUtil.getLastHurtMob(mob) || flag)
+						if(SuperDuperUtil.getLastHurtMob(mob) != null)
 						{
-							event.setCanceled(true);
+							if(target != SuperDuperUtil.getLastHurtMob(mob))
+							{
+								mob.setTarget(null);
+							}
 						}
-					}
-					
-					if(SuperDuperUtil.isAllay(owner, mob, target) || SuperDuperUtil.getLastHurtMob(mob) == null)
-					{
-						event.setCanceled(true);
+						if(SuperDuperUtil.getLastHurtByMob(mob) == null && SuperDuperUtil.getLastHurtMob(mob) == null)
+						{
+							mob.setTarget(null);
+						}
+						if(SuperDuperUtil.isAllay(owner, mob, target))
+						{
+							mob.setTarget(null);
+						}
+						if(!SuperDuperUtil.isInAttackRange(mob, target))
+						{
+							mob.setTarget(null);
+						}
 					}
 				}
 			}
-			if(living instanceof TamableAnimal animal)
+			if(mob instanceof TamableAnimal animal)
 			{
-				if(animal.getOwner() != null)
+				if(!animal.level.isClientSide)
 				{
-					if(SuperDuperUtil.isAllay(animal.getOwner(), animal, target))
+					if(animal.getTarget() != null)
 					{
-						event.setCanceled(true);
+						if(SuperDuperUtil.isAllay(animal.getOwner(), animal, animal.getTarget()))
+						{
+							animal.setTarget(null);
+						}
 					}
 				}
 			}

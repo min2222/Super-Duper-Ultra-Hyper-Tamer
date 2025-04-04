@@ -1,6 +1,7 @@
 package com.min01.superduper.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends MixinEntity
@@ -84,6 +86,14 @@ public abstract class MixinLivingEntity extends MixinEntity
 					Entity entity = living.getFirstPassenger();
 					if(entity instanceof Player player)
 					{
+						boolean jumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, SuperDuperUtil.getOwner(living), "f_20899_");
+						if(jumping)
+						{
+							if(living.onGround() || living.isInWater())
+							{
+								this.jumpFromGround();
+							}
+						}
 						Vec3 travelVector = new Vec3(player.xxa, player.yya, player.zza);
 				        if(player.zza != 0 || player.xxa != 0)
 				        {
@@ -101,5 +111,11 @@ public abstract class MixinLivingEntity extends MixinEntity
 			}
 		}
 		return vec3;
+	}
+	
+	@Shadow
+	protected void jumpFromGround()
+	{
+		
 	}
 }

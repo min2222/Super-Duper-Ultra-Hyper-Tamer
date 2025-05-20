@@ -7,27 +7,19 @@ import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
 import com.min01.superduper.capabilities.ITamerCapability;
 import com.min01.superduper.capabilities.TamerCapabilities;
 import com.min01.superduper.command.TameCommand;
-import com.min01.superduper.config.SuperDuperConfig;
 import com.min01.superduper.util.SuperDuperUtil;
 
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -139,117 +131,6 @@ public class EventHandlerForge
 					mob.goalSelector.addGoal(2, new SuperDuperFollowOwnerGoal(mob, SuperDuperUtil.parseMovementSpeed(mob), 4.0F, 2.0F, true));
 					mob.targetSelector.addGoal(1, new SuperDuperOwnerHurtByTargetGoal(mob));
 					mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
-				}
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onEntityInteract(PlayerInteractEvent.EntityInteract event)
-	{
-		Player player = event.getEntity();
-		ItemStack stack = event.getItemStack();
-		Entity entity = event.getTarget();
-		if(entity instanceof LivingEntity living && !SuperDuperUtil.isBlacklisted(living))
-		{
-			if(!SuperDuperUtil.isTame(living))
-			{
-				Item item = SuperDuperUtil.parseItemForTaming(living);
-				if(item != null)
-				{
-					if(stack.is(item))
-					{
-						if(Math.random() <= SuperDuperUtil.parseTameChance(living) / 100.0F)
-						{
-							SuperDuperUtil.tame(living, player);
-						}
-						else
-						{
-							for(int i = 0; i < 7; ++i) 
-							{
-								double d0 = living.level.random.nextGaussian() * 0.02D;
-								double d1 = living.level.random.nextGaussian() * 0.02D;
-								double d2 = living.level.random.nextGaussian() * 0.02D;
-								living.level.addParticle(ParticleTypes.SMOKE, living.getRandomX(1.0D), living.getRandomY() + 0.5D, living.getRandomZ(1.0D), d0, d1, d2);
-							}
-						}
-						if(!player.getAbilities().instabuild)
-						{
-							stack.shrink(1);
-						}
-						event.setCancellationResult(InteractionResult.SUCCESS);
-					}
-				}
-				else if(SuperDuperConfig.handTame.get() && !(living instanceof TamableAnimal))
-				{
-					int cooldown = SuperDuperUtil.getTameCooldown(player);
-					if(stack.isEmpty())
-					{
-						if(cooldown <= 0)
-						{
-							float chance = SuperDuperUtil.parseTameChance(living) / 100.0F;
-							if(chance <= 0.0F)
-							{
-								chance = 10.0F / living.getMaxHealth();
-							}
-							if(Math.random() <= chance)
-							{
-								SuperDuperUtil.tame(living, player);
-								event.setCancellationResult(InteractionResult.SUCCESS);
-							}
-							else
-							{
-								for(int i = 0; i < 7; ++i) 
-								{
-									double d0 = living.level.random.nextGaussian() * 0.02D;
-									double d1 = living.level.random.nextGaussian() * 0.02D;
-									double d2 = living.level.random.nextGaussian() * 0.02D;
-									living.level.addParticle(ParticleTypes.SMOKE, living.getRandomX(1.0D), living.getRandomY() + 0.5D, living.getRandomZ(1.0D), d0, d1, d2);
-								}
-								SuperDuperUtil.setTameCooldown(player, (int) Math.floor(living.getMaxHealth() / 20));
-							}
-						}
-						else
-						{
-			                player.displayClientMessage(Component.translatable("entity.superduper.cooldown", cooldown), true);
-						}
-					}
-				}
-			}
-			else if(player == SuperDuperUtil.getOwner(living))
-			{
-				if(player.isShiftKeyDown())
-				{
-					int command = SuperDuperUtil.getCommand(living) + 1;
-					SuperDuperUtil.setCommand(living, command >= 3 ? 0 : command);
-	                player.displayClientMessage(Component.translatable("entity.superduper.all.command_" + SuperDuperUtil.getCommand(living), living.getName()), true);
-				}
-				else
-				{
-					if(player.getMainHandItem().isEmpty())
-					{
-						if(!SuperDuperUtil.isRidingBlacklisted(living))
-						{
-							player.startRiding(living);
-						}
-					}
-					else
-					{
-						Item item = SuperDuperUtil.parseHealItem(living);
-						if(item != null)
-						{
-							if(stack.is(item))
-							{
-								float amount = SuperDuperUtil.parseHealAmount(living);
-								living.heal(amount);
-								if(!player.getAbilities().instabuild)
-								{
-									stack.shrink(1);
-								}
-								event.setCancellationResult(InteractionResult.PASS);
-							}
-						}
-					}
 				}
 			}
 		}

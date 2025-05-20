@@ -7,6 +7,9 @@ import java.util.UUID;
 import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
+import com.min01.superduper.capabilities.ITamerCapability;
+import com.min01.superduper.capabilities.TamerCapabilities;
+import com.min01.superduper.capabilities.TamerCapabilityImpl;
 import com.min01.superduper.config.SuperDuperConfig;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -48,6 +51,18 @@ public class SuperDuperUtil
 				mob.targetSelector.addGoal(2, new SuperDuperOwnerHurtTargetGoal(mob));
 			}
 		}
+	}
+	
+	public static void setTameCooldown(LivingEntity entity, int cooldown)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setTameCooldown(cooldown);
+	}
+	
+	public static int getTameCooldown(LivingEntity entity)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		return cap.getTameCooldown();
 	}
 	
 	public static double parseRideOffset(LivingEntity entity)
@@ -170,7 +185,7 @@ public class SuperDuperUtil
 				return Float.valueOf(range);
 			}
 		}
-		return 1000.0F;
+		return 3.5F;
 	}
 	
 	public static float parseMovementSpeed(LivingEntity entity)
@@ -186,7 +201,7 @@ public class SuperDuperUtil
 				return Float.valueOf(speed);
 			}
 		}
-		return 1.3F;
+		return 0.8F;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -267,64 +282,81 @@ public class SuperDuperUtil
 	
 	public static void setCommand(LivingEntity entity, int command)
 	{
-		entity.getPersistentData().putInt("Command", command);
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setCommand(command);
 	}
 	
 	public static int getCommand(LivingEntity entity)
 	{
-		return entity.getPersistentData().getInt("Command");
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		return cap.getCommand();
+	}
+	
+	public static void setLastHurtByMob(LivingEntity entity, UUID uuid)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setLastHurtByMob(uuid);
 	}
 	
 	public static void setLastHurtByMob(LivingEntity entity, LivingEntity mob)
 	{
-		entity.getPersistentData().putUUID("LastHurtByMobUUID", mob.getUUID());
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setLastHurtByMob(mob.getUUID());
 	}
 	
 	public static LivingEntity getLastHurtByMob(LivingEntity entity)
 	{
-		if(entity.getPersistentData().contains("LastHurtByMobUUID"))
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		Entity mob = getEntityByUUID(entity.level, cap.getLastHurtByMob());
+		if(mob instanceof LivingEntity living)
 		{
-			Entity lastHurtByMob = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("LastHurtByMobUUID"));
-			if(lastHurtByMob instanceof LivingEntity living)
-			{
-				return living;
-			}
+			return living;
 		}
 		return null;
+	}
+	
+	public static void setLastHurtMob(LivingEntity entity, UUID uuid)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setLastHurtMob(uuid);
 	}
 	
 	public static void setLastHurtMob(LivingEntity entity, LivingEntity mob)
 	{
-		entity.getPersistentData().putUUID("LastHurtMobUUID", mob.getUUID());
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setLastHurtMob(mob.getUUID());
 	}
 	
 	public static LivingEntity getLastHurtMob(LivingEntity entity)
 	{
-		if(entity.getPersistentData().contains("LastHurtMobUUID"))
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		Entity mob = getEntityByUUID(entity.level, cap.getLastHurtMob());
+		if(mob instanceof LivingEntity living)
 		{
-			Entity lastHurtMob = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("LastHurtMobUUID"));
-			if(lastHurtMob instanceof LivingEntity living)
-			{
-				return living;
-			}
+			return living;
 		}
 		return null;
 	}
 	
+	public static void setOwner(LivingEntity entity, UUID uuid)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setOwner(uuid);
+	}
+	
 	public static void setOwner(LivingEntity entity, LivingEntity owner)
 	{
-		entity.getPersistentData().putUUID("OwnerUUID", owner.getUUID());
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.setOwner(owner.getUUID());
 	}
 	
 	public static LivingEntity getOwner(LivingEntity entity)
 	{
-		if(entity.getPersistentData().contains("OwnerUUID"))
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		Entity owner = getEntityByUUID(entity.level, cap.getOwner());
+		if(owner instanceof LivingEntity living)
 		{
-			Entity owner = getEntityByUUID(entity.level, entity.getPersistentData().getUUID("OwnerUUID"));
-			if(owner instanceof LivingEntity living)
-			{
-				return living;
-			}
+			return living;
 		}
 		return null;
 	}

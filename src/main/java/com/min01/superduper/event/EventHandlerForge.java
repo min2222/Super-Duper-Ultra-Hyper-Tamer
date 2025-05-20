@@ -4,7 +4,10 @@ import com.min01.superduper.SuperDuperUltraHyperTamer;
 import com.min01.superduper.ai.goal.SuperDuperFollowOwnerGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtByTargetGoal;
 import com.min01.superduper.ai.goal.SuperDuperOwnerHurtTargetGoal;
+import com.min01.superduper.capabilities.ITamerCapability;
+import com.min01.superduper.capabilities.TamerCapabilities;
 import com.min01.superduper.command.TameCommand;
+import com.min01.superduper.config.SuperDuperConfig;
 import com.min01.superduper.util.SuperDuperUtil;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,6 +45,7 @@ public class EventHandlerForge
 	public static void onLivingTick(LivingTickEvent event)
 	{
 		LivingEntity living = event.getEntity();
+		living.getCapability(TamerCapabilities.TAMER).ifPresent(ITamerCapability::update);
 		if(living instanceof Mob mob)
 		{
 			if(SuperDuperUtil.isTame(mob))
@@ -174,6 +178,41 @@ public class EventHandlerForge
 							stack.shrink(1);
 						}
 						event.setCancellationResult(InteractionResult.SUCCESS);
+					}
+				}
+				else if(SuperDuperConfig.handTame.get())
+				{
+					int cooldown = SuperDuperUtil.getTameCooldown(player);
+					if(stack.isEmpty())
+					{
+						if(cooldown <= 0)
+						{
+							float chance = SuperDuperUtil.parseTameChance(living) / 100.0F;
+							if(chance <= 0.0F)
+							{
+								chance = 10.0F / living.getMaxHealth();
+							}
+							if(Math.random() <= chance)
+							{
+								SuperDuperUtil.tame(living, player);
+								event.setCancellationResult(InteractionResult.SUCCESS);
+							}
+							else
+							{
+								for(int i = 0; i < 7; ++i) 
+								{
+									double d0 = living.level.random.nextGaussian() * 0.02D;
+									double d1 = living.level.random.nextGaussian() * 0.02D;
+									double d2 = living.level.random.nextGaussian() * 0.02D;
+									living.level.addParticle(ParticleTypes.SMOKE, living.getRandomX(1.0D), living.getRandomY() + 0.5D, living.getRandomZ(1.0D), d0, d1, d2);
+								}
+								SuperDuperUtil.setTameCooldown(player, (int) Math.floor(living.getMaxHealth() / 20));
+							}
+						}
+						else
+						{
+			                player.displayClientMessage(Component.translatable("entity.superduper.cooldown", cooldown), true);
+						}
 					}
 				}
 			}

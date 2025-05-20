@@ -16,6 +16,7 @@ public class SuperDuperConfig
 	public static ConfigValue<List<? extends String>> blacklist;
 	public static ConfigValue<List<? extends String>> tameChance;
 	public static ForgeConfigSpec.BooleanValue forceTame;
+	public static ForgeConfigSpec.BooleanValue handTame;
 	public static ConfigValue<List<? extends String>> healItem;
 	public static ConfigValue<List<? extends String>> healAmount;
 	public static ConfigValue<List<? extends String>> particleWhenTamed;
@@ -59,6 +60,7 @@ public class SuperDuperConfig
         config.pop();
         
     	config.push("Common Settings");
+    	SuperDuperConfig.handTame = config.comment("enable empty hand taming, if mob is not defined in config, right click it with empty hand will have chance to tame it").define("handTame", true);
     	SuperDuperConfig.tamingItems = config.comment("item needed for tame mobs. example : minecraft:husk=minecraft:rotten_flesh").defineList("tamingItems", Arrays.asList(new String[] {
     			"minecraft:husk=minecraft:rotten_flesh"
     	}), String.class::isInstance);

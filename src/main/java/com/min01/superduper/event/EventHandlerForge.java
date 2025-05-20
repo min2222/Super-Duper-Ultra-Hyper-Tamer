@@ -180,7 +180,7 @@ public class EventHandlerForge
 						event.setCancellationResult(InteractionResult.SUCCESS);
 					}
 				}
-				else if(SuperDuperConfig.handTame.get())
+				else if(SuperDuperConfig.handTame.get() && !(living instanceof TamableAnimal))
 				{
 					int cooldown = SuperDuperUtil.getTameCooldown(player);
 					if(stack.isEmpty())
@@ -192,7 +192,7 @@ public class EventHandlerForge
 							{
 								chance = 10.0F / living.getMaxHealth();
 							}
-							if(Math.random() <= chance)
+							if(Math.random() <= chance / 100.0F)
 							{
 								SuperDuperUtil.tame(living, player);
 								event.setCancellationResult(InteractionResult.SUCCESS);

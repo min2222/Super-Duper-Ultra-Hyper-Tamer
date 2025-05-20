@@ -192,7 +192,7 @@ public class EventHandlerForge
 							{
 								chance = 10.0F / living.getMaxHealth();
 							}
-							if(Math.random() <= chance / 100.0F)
+							if(Math.random() <= chance)
 							{
 								SuperDuperUtil.tame(living, player);
 								event.setCancellationResult(InteractionResult.SUCCESS);

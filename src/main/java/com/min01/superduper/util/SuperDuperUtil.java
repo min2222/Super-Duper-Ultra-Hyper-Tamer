@@ -113,6 +113,22 @@ public class SuperDuperUtil
 		return 1.0F;
 	}
 	
+	public static float parseTameChanceForHandTaming(LivingEntity entity)
+	{
+		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+		List<? extends String> list = SuperDuperConfig.tameChance.get();
+		for(String string : list)
+		{
+			String mobId = string.split("=")[0];
+			String chance = string.split("=")[1];
+			if(location.toString().equals(mobId))
+			{
+				return Float.valueOf(chance);
+			}
+		}
+		return 20.0F / entity.getMaxHealth();
+	}
+	
 	public static float parseTameChance(LivingEntity entity)
 	{
 		ResourceLocation location = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
@@ -375,5 +391,10 @@ public class SuperDuperUtil
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static float percent(float baseValue, float percent)
+	{
+		return baseValue * percent / 100;
 	}
 }

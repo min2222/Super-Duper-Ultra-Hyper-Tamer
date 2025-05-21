@@ -60,16 +60,11 @@ public class MixinEntity
 				}
 				else if(SuperDuperConfig.handTame.get())
 				{
-					int cooldown = SuperDuperUtil.getTameCooldown(player);
-					if(stack.isEmpty())
+					if(stack.isEmpty() && living.getHealth() <= SuperDuperUtil.percent(living.getMaxHealth(), 10))
 					{
-						if(cooldown <= 0)
+						if(SuperDuperUtil.getTameCooldown(player) <= 0)
 						{
-							float chance = SuperDuperUtil.parseTameChance(living) / 100.0F;
-							if(chance <= 0.0F)
-							{
-								chance = 10.0F / living.getMaxHealth();
-							}
+							float chance = SuperDuperUtil.parseTameChanceForHandTaming(living);
 							if(Math.random() <= chance)
 							{
 								SuperDuperUtil.tame(living, player);
@@ -83,12 +78,12 @@ public class MixinEntity
 									double d2 = living.level.random.nextGaussian() * 0.02D;
 									living.level.addParticle(ParticleTypes.SMOKE, living.getRandomX(1.0D), living.getRandomY() + 0.5D, living.getRandomZ(1.0D), d0, d1, d2);
 								}
-								SuperDuperUtil.setTameCooldown(player, (int) Math.floor(living.getMaxHealth() / 20));
+								SuperDuperUtil.setTameCooldown(player, (int) Math.floor(living.getMaxHealth() / 20) * 20);
 							}
 						}
 						else
 						{
-			                player.displayClientMessage(Component.translatable("entity.superduper.cooldown", cooldown), true);
+			                player.displayClientMessage(Component.translatable("entity.superduper.cooldown", SuperDuperUtil.getTameCooldown(player)), true);
 						}
 					}
 				}

@@ -1,0 +1,8 @@
+{
+  "item.superdupertamer.super_duper_ultra_hyper_lead": "超级拴绳",
+  "entity.superduper.all.command_0": "%s 正在自由行动",
+  "entity.superduper.all.command_1": "%s 正在跟随",
+  "entity.superduper.all.command_2": "%s 停留在原地",
+  "entity.superduper.already_tameable": "这个生物无需此模组即可被驯服",
+  "entity.superduper.cooldown": "冷却时间剩余：%s 秒"
+}

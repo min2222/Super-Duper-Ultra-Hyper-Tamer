@@ -185,7 +185,7 @@ public class SuperDuperUtil
 				return Float.valueOf(range);
 			}
 		}
-		return 3.5F;
+		return 1000.0F;
 	}
 	
 	public static float parseMovementSpeed(LivingEntity entity)

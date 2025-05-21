@@ -35,6 +35,7 @@ public class SuperDuperUtil
 		if(!isTame(owner))
 		{
 			setOwner(pet, owner);
+			addPet(owner, pet);
 			for(int i = 0; i < 7; ++i) 
 			{
 				double d0 = pet.level.random.nextGaussian() * 0.02D;
@@ -217,7 +218,7 @@ public class SuperDuperUtil
 				return Float.valueOf(speed);
 			}
 		}
-		return 0.8F;
+		return 0.5F;
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -296,6 +297,18 @@ public class SuperDuperUtil
 		return getOwner(entity) != null;
 	}
 	
+	public static void addPet(LivingEntity entity, LivingEntity pet)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		cap.addPet(pet.getUUID());
+	}
+	
+	public static List<UUID> getPets(LivingEntity entity)
+	{
+		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
+		return cap.getPets();
+	}
+	
 	public static void setCommand(LivingEntity entity, int command)
 	{
 		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
@@ -324,11 +337,7 @@ public class SuperDuperUtil
 	{
 		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
 		Entity mob = getEntityByUUID(entity.level, cap.getLastHurtByMob());
-		if(mob instanceof LivingEntity living)
-		{
-			return living;
-		}
-		return null;
+		return (LivingEntity) mob;
 	}
 	
 	public static void setLastHurtMob(LivingEntity entity, UUID uuid)
@@ -347,11 +356,7 @@ public class SuperDuperUtil
 	{
 		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
 		Entity mob = getEntityByUUID(entity.level, cap.getLastHurtMob());
-		if(mob instanceof LivingEntity living)
-		{
-			return living;
-		}
-		return null;
+		return (LivingEntity) mob;
 	}
 	
 	public static void setOwner(LivingEntity entity, UUID uuid)
@@ -370,11 +375,7 @@ public class SuperDuperUtil
 	{
 		ITamerCapability cap = entity.getCapability(TamerCapabilities.TAMER).orElse(new TamerCapabilityImpl());
 		Entity owner = getEntityByUUID(entity.level, cap.getOwner());
-		if(owner instanceof LivingEntity living)
-		{
-			return living;
-		}
-		return null;
+		return (LivingEntity) owner;
 	}
 	
 	@SuppressWarnings("unchecked")

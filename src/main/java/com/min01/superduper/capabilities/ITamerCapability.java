@@ -1,5 +1,6 @@
 package com.min01.superduper.capabilities;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.min01.superduper.SuperDuperUltraHyperTamer;
@@ -38,4 +39,8 @@ public interface ITamerCapability extends INBTSerializable<CompoundTag>
 	void setTameCooldown(int cooldown);
 	
 	int getTameCooldown();
+	
+	void addPet(UUID uuid);
+	
+	List<UUID> getPets();
 }

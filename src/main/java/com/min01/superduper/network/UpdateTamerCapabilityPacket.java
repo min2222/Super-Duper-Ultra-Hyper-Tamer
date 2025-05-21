@@ -68,6 +68,8 @@ public class UpdateTamerCapabilityPacket
 							}
 							SuperDuperUtil.setCommand(living, cap.getCommand());
 							SuperDuperUtil.setTameCooldown(living, cap.getTameCooldown());
+							SuperDuperUtil.getPets(living).clear();
+							SuperDuperUtil.getPets(living).addAll(cap.getPets());
 						}
 					});
 				}

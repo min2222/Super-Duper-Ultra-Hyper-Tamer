@@ -30,6 +30,10 @@ public abstract class MixinLivingEntity extends MixinEntity
 					Entity entity = living.getFirstPassenger();
 					if(entity instanceof Player player)
 					{
+						if(player.isShiftKeyDown())
+						{
+							player.stopRiding();
+						}
 						boolean jumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, SuperDuperUtil.getOwner(living), "f_20899_");
 						if(jumping)
 						{

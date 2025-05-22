@@ -7,7 +7,8 @@
 		"MixinLivingEntity",
 		"MixinEntity",
 		"MixinProjectile",
-		"MixinMonster"
+		"MixinMonster",
+		"MixinMob"
 	],
 	"client": [],
 	"server": [],
